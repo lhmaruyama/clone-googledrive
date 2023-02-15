@@ -1,8 +1,8 @@
 import './App.css';
 import React, { useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { auth, provider } from "../src/firebase.js"
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { auth, provider } from "../src/firebase"
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth"
 //import {Router, Routes, Route} from "react-router-dom"
 //import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import Home from "./Home"
@@ -10,6 +10,17 @@ import Logo from "./logo-drive.png"
 
 function App() {
   const [login, setLogin] = useState(null)
+
+  useEffect(()=>{
+    onAuthStateChanged(auth,
+      (val)=>{
+        setLogin(val.email)
+        alert("Bem vindo de volta " + val.displayName)
+        //console.log(val)
+      }
+    )
+  },[])
+
   function handleLogin(e) {
     e.preventDefault()
     //alert("oioioihofihroih")
