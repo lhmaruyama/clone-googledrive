@@ -14,7 +14,11 @@ function App() {
   useEffect(()=>{
     onAuthStateChanged(auth,
       (val)=>{
-        setLogin(val.email)
+        setLogin({
+          name: val.displayName,
+          email: val.email,
+          image: val.photoURL
+        })
         alert("Bem vindo de volta " + val.displayName)
         //console.log(val)
       }
@@ -36,7 +40,7 @@ function App() {
         <BrowserRouter>
 
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home credential={login}/>} />
           </Routes>
 
         </BrowserRouter>
