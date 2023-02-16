@@ -33,9 +33,8 @@ function Home(props){
         uploadBytes(refFile,file)
         .then((men)=>{alert("File uploaded successfully")})
         .catch()
-
-    }
-
+      }
+      
     return(
         <div className="main">
             <div className="header-container">
