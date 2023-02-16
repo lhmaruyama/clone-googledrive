@@ -3,32 +3,154 @@
   padding: 0;
   box-sizing: border-box;
   color: black;
-
 }
 
 .header-container{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 15px 15px;
   border-bottom: 1px solid #ccc ;
-}
-
-.header-logo img{
-  width: 100px;
+  height: 64px;
 }
 
 .header-search {
   display: flex;
   align-items: center;
+  /* width: 70%; */
+  background-color: #f2f3f5;
+  border-radius: 7px;
+  height: 45px;
+
+}
+.header-icons{
+  display: flex;
+  align-items: center;
+
+  /* width: 15%; */
 }
 
+.header-logo img{
+  width: 107px;
+  margin: 2px;
+
+}
 .header-search img {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
+  margin: 10px;
+  filter: invert(40%)
+}
+.header-search input {
+  width: 400px;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  font-size: 18px;
+  color: dimgray;
 }
 
-.header-icons img{
+.icon{
+  width: 25px;
+  height: 25px;
+  margin: 12px;
+  filter: invert(40%)
+}
+
+.photo{
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  margin: 10px;
+}
+
+.hidden-input{
+  display: none;
+}
+
+.sidebar-container{
+  display: flex;
+}
+
+.sidebar{
+  width: 250px;
+}
+
+.content{
+  width: calc(100%);
+}
+
+.sidebar-button{
+  display: flex;
+  height: 48px;
+  width: 120px;
+  margin: 12px;
+  border-radius: 24px;
+  /* padding: 20px; */
+  border: 1px solid #e9e9e9 ;
+  /* background-color: #f2f3f5; */
+  box-shadow: 0px 2px 2px 0px #00000060;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar-button svg {
+  font-size: 30px;
+  filter: invert(40%);
+  margin: 6px;
+}
+
+.folders{
+  margin-left: 0px;
+  border-bottom: 1px solid #ccc ;
+}
+
+.my-folder{
+  background-color: #e8f0fd;
+  height: 42px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+}
+
+.my-folder span{
+  color: #2959ae;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.folders span{
+  margin-left: 20px;
+}
+
+.folder{
+  height: 42px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  filter: invert(40%);
+  cursor: pointer;
+
+}
+
+.folders svg{
+  filter: invert(40%);
+  font-size: 22px;
+  margin-left: 20px;
+}
+
+.top-content{
+  filter: invert(10%);
+  font-size: 20px;
+  font-weight:400;
+  margin-left: 30px;
+  border-bottom: 1px solid #ccc ;
+  height: 50px;
+  display: flex;
+  align-items: center;
 }

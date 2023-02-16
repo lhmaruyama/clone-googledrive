@@ -19,7 +19,7 @@ function App() {
           email: val.email,
           image: val.photoURL
         })
-        alert("Bem vindo de volta " + val.displayName)
+        //alert("Bem vindo de volta " + val.displayName)
         //console.log(val)
       }
     )
