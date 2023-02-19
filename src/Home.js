@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
-import {addDoc, collection} from "firebase/firestore"
+import { addDoc, collection, doc, setDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
 import { ImGoogleDrive } from "react-icons/im"
@@ -18,43 +18,47 @@ import Apps from "../src/icon/apps.png"
 
 function Home(props) {
 
-/*     function loggout(e) {
-        e.preventDefault()
-        signOut(auth)
-            .then(result => { 
-                alert("Deslogado ")
-                props.login
-            })
-            .catch()
-    } */
+    /*     function loggout(e) {
+            e.preventDefault()
+            signOut(auth)
+                .then(result => { 
+                    alert("Deslogado ")
+                    props.login
+                })
+                .catch()
+        } */
 
     function loggout(e) {
         e.preventDefault()
-        //console.log(props)
         //props.credential = null
+
+
+
     }
 
-    function uploadFile() {
+    function uploadFile(uid) {
         let file = document.querySelector("#new-file").files[0]
         let refFile = ref(storage, "myfiles/" + file.name)
         //let file = document.querySelector("[name=file]").files[0]
         //console.log(file.name)
-        //console.log(refFile)
-        //alert("file")
+
         uploadBytes(refFile, file)
-            .then((men) => { alert("File uploaded successfully")
+            .then((men) => {
+                alert("File uploaded successfully")
                 getDownloadURL(refFile)
-                .then((url)=>{ 
-                    //console.log(url)               
-                    addDoc(collection(db,"files"),{fileUrl:url})
-                })
-                .catch(err=>{console.log(err)})
+                    .then((url) => {
+                        //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
+                        //const myref = doc(db,"files", "subfiles", "item", "subitem")
+                        const myref = doc(collection(db, "drive", uid, "files"))
+                        setDoc(myref, { fileUrl: url, type: file.type })
+                    })
+                    .catch(err => { console.log(err) })
             })
             .catch()
-            //const stor = getStorage()
-            //const storRef = ref(stor, "myfiles/" + file.name)
-            //console.log(storRef === refFile)
-            
+        //const stor = getStorage()
+        //const storRef = ref(stor, "myfiles/" + file.name)
+        //console.log(storRef === refFile)
+        //false            
     }
 
     return (
@@ -79,7 +83,7 @@ function Home(props) {
                 <div className="sidebar" >
                     <form className="sidebar-form" >
                         <label htmlFor="new-file" className="sidebar-button"><GoPlus />Novo</label>
-                        <input onChange={() => uploadFile()} id="new-file" className="hidden-input" type="file" name="file" />
+                        <input onChange={() => uploadFile(props.credential.uid)} id="new-file" className="hidden-input" type="file" name="file" />
                     </form>
                     <div className="folders" >
                         <div className="my-folder" >

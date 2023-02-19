@@ -17,7 +17,8 @@ function App() {
         setLogin({
           name: val.displayName,
           email: val.email,
-          image: val.photoURL
+          image: val.photoURL,
+          uid: val.uid
         })
         //alert("Bem vindo de volta " + val.displayName)
         //console.log(val)
