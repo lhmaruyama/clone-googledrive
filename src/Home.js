@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { addDoc, collection, doc, setDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
@@ -32,33 +32,47 @@ function Home(props) {
         e.preventDefault()
         //props.credential = null
 
-
-
     }
 
-    function uploadFile(uid) {
+    const [progress, setProgress] = useState(0)
+
+    async function uploadFile(uid) {
         let file = document.querySelector("#new-file").files[0]
         let refFile = ref(storage, "myfiles/" + file.name)
         //let file = document.querySelector("[name=file]").files[0]
         //console.log(file.name)
 
-        uploadBytes(refFile, file)
-            .then((men) => {
-                alert("File uploaded successfully")
-                getDownloadURL(refFile)
-                    .then((url) => {
-                        //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
-                        //const myref = doc(db,"files", "subfiles", "item", "subitem")
-                        const myref = doc(collection(db, "drive", uid, "files"))
-                        setDoc(myref, { fileUrl: url, type: file.type })
-                    })
-                    .catch(err => { console.log(err) })
-            })
-            .catch()
+        const uploadTask = uploadBytesResumable(refFile, file)
+        uploadTask.on("state_changed", (snapshot) => {
+            const change = (snapshot.bytesTransferred / snapshot.totalBytes)
+            setProgress(change)
+            console.log("progress: " + change*100 + "%")
+        })
+
+        await uploadBytes(refFile, file)
+        .then(() => {
+
+                //console.log("Successfully uploaded to storage")
+                //setProgress(0)
+            }).catch()
+
         //const stor = getStorage()
         //const storRef = ref(stor, "myfiles/" + file.name)
         //console.log(storRef === refFile)
-        //false            
+        //false   
+        
+        await getDownloadURL(refFile)
+        .then((url) => {
+            //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
+            //const myref = doc(db,"files", "subfiles", "item", "subitem")
+            const myref = doc(collection(db, "drive", uid, "files"))
+            setDoc(myref, { fileUrl: url, type: file.type })
+
+            //console.log("Successfully saved data in firestore")
+            setProgress(0)
+            console.log("progress: " + progress + "%")
+        }).catch(err => { console.log(err) })
+
     }
 
     return (
@@ -103,12 +117,24 @@ function Home(props) {
                         </div>
                     </div>
                 </div>
+
+
                 <div className="content" >
                     <div className="top-content" >
                         <span>Meu Drive</span>
-
+                    </div>
+                    <div >
+                        {
+                            (progress > 0) ?
+                                <div className="progress">
+                                    <label htmlFor="bar">Downloading progress:</label>
+                                    <progress id="bar" value={progress} max={1}>{progress}%</progress>
+                                </div> :
+                                <div></div>
+                        }
                     </div>
                 </div>
+
             </div>
 
 

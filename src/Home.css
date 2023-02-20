@@ -136,7 +136,6 @@
   font-weight: bold;
   filter: invert(40%);
   cursor: pointer;
-
 }
 
 .folders svg{
@@ -154,4 +153,22 @@
   height: 50px;
   display: flex;
   align-items: center;
+}
+
+.progress{
+  position: absolute;
+  height: 60px;
+  width: 250px;
+  background-color:#f2f3f5;
+  box-shadow: 0px 2px 2px 0px #00000060;
+  border-radius: 10px;
+  text-align: center;
+  padding-top: 8px;
+  /* margin-left: 30px; */
+  left: 50%;
+  top: 150px;
+  transform: translateX(-50%);
+  /* z-index: 2; */
+  /* top: 50px; */
+  /* left: 200px; */
 }
