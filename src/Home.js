@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { addDoc, collection, doc, setDoc, onSnapshot, query, where } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
 
@@ -23,31 +23,31 @@ import Apps from "../src/icon/apps.png"
 
 function Home(props) {
 
-    /*     function loggout(e) {
-            e.preventDefault()
-            signOut(auth)
-                .then(result => { 
-                    alert("Deslogado ")
-                    props.login
-                })
-                .catch()
-        } */
-
     function loggout(e) {
         e.preventDefault()
-        //props.credential = null
-
+        signOut(auth)
+            .then(result => {
+                alert("Deslogado ")
+                window.location.href = "/"
+            })
+            .catch()
     }
+
+    /*     function loggout(e) {
+            e.preventDefault()
+            //props.credential = null
+    
+        } */
 
     const [progress, setProgress] = useState(0)
     const [archive, setArchive] = useState([])
-    const [iconSelect, setIconSelect] = useState(1)
+    //const [iconSelect, setIconSelect] = useState(1)
 
-    function changeButton(){
-        (iconSelect==0)?setIconSelect(1):setIconSelect(0)
-    }
-    useEffect(() =>{
-    }, [])
+    /*     function changeButton(){
+            (iconSelect==0)?setIconSelect(1):setIconSelect(0)
+        }
+        useEffect(() =>{
+        }, []) */
 
     useEffect(() => {
         //const myref = doc(collection(db, "drive", props.credential.uid, "files"))
@@ -64,7 +64,7 @@ function Home(props) {
             setArchive(setArch)
         })
 
-    }, [])
+    }, [props])
 
 
     async function uploadFile(uid) {
@@ -111,6 +111,11 @@ function Home(props) {
                 //console.log("progress: " + progress + "%")
             }).catch(err => { console.log(err) })
 
+    }
+    const removeDoc = ()=>{
+        const myref = doc(collection(db, "drive", props.credential.uid, "files"))
+        deleteDoc(myref)
+        //console.log(myref.id)
     }
 
     return (
@@ -163,7 +168,7 @@ function Home(props) {
                         <span>Meu Drive</span>
                     </div>
                     <div className="header-content" >
-                        <h5 className="header-name"><GrCheckbox onClick={() => { alert("hiuiuiu") }} />Nome</h5>
+                        <h5 className="header-name">Nome</h5>
                         <h5 className="header-owner">Propietário</h5>
                         <h5 className="header-date">Data</h5>
                         <h5 className="header-size">Tamanho do arquivo</h5>
@@ -174,11 +179,11 @@ function Home(props) {
                             archive.map(data => {
                                 // AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip
                                 //console.log(data.type.split("/")[1])
-                                //const image1 = <GrCheckbox onClick={()=>{alert("hiuiuiu")}}/>
-                                const image2 = <BsCloudArrowDown className="iconDown" />
+                                const image1 = <BiTrash className="icon-trash-field" onClick={() => removeDoc()} />
+                                const image2 = <BsCloudArrowDown className="iconDown" onClick={() => console.log(data)} />
                                 return (
                                     <div className="boxFile">
-                                        <span onClick={()=>changeButton()} className="header-name-field">{iconSelect}{image2} {data.name}</span>
+                                        <span className="header-name-field">{image1}{image2} {data.name}</span>
                                         <span className="header-owner-field">{props.credential.name}</span>
                                         <span className="header-date-field">{data.date}</span>
                                         <span className="header-size-field">{data.size + " KB"}</span>
@@ -204,8 +209,7 @@ function Home(props) {
 
 
 
-            <h2>{new Date().getDate()}</h2>
-            <h2>{props.credential.name}</h2>
+
             <a onClick={(e) => loggout(e)} href='#'>Sair</a>
             <div>
 
