@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
 
@@ -104,7 +104,7 @@ function Home(props) {
                 //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
                 //const myref = doc(db,"files", "subfiles", "item", "subitem")
                 const myref = doc(collection(db, "drive", uid, "files"))
-                setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date })
+                setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date, id: myref.id })
 
                 //console.log("Successfully saved data in firestore")
                 setProgress(0)
@@ -112,10 +112,16 @@ function Home(props) {
             }).catch(err => { console.log(err) })
 
     }
-    const removeDoc = ()=>{
-        const myref = doc(collection(db, "drive", props.credential.uid, "files"))
+    const removeDoc = (data)=>{
+
+        const myref = doc(db, "drive", props.credential.uid, "files", data.id)
         deleteDoc(myref)
-        //console.log(myref.id)
+
+    }
+
+    const download = (data)=>{
+        const myref = data.fileUrl
+        console.log(myref)
     }
 
     return (
@@ -179,8 +185,8 @@ function Home(props) {
                             archive.map(data => {
                                 // AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip
                                 //console.log(data.type.split("/")[1])
-                                const image1 = <BiTrash className="icon-trash-field" onClick={() => removeDoc()} />
-                                const image2 = <BsCloudArrowDown className="iconDown" onClick={() => console.log(data)} />
+                                const image1 = <BiTrash className="icon-trash-field" onClick={() => removeDoc(data)} />
+                                const image2 = <BsCloudArrowDown className="iconDown" onClick={() => download(data)} />
                                 return (
                                     <div className="boxFile">
                                         <span className="header-name-field">{image1}{image2} {data.name}</span>
