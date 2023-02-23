@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
-import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, getBytes } from "firebase/storage"
 import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
 
 import { GrCheckboxSelected, GrCheckbox } from "react-icons/gr"
-import { AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip } from "react-icons/ai"
-import { BsFileEarmarkExcel, BsFileEarmarkWord, BsFileEarmarkImage, BsFileEarmarkPdf, BsFileEarmarkFont, BsFileEarmark, BsFileEarmarkZip, BsFileEarmarkMusic, BsFileEarmarkPlay } from "react-icons/bs"
+import { AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip, AiOutlineEye } from "react-icons/ai"
+import { BsFileEarmarkExcel, BsFileEarmarkWord, BsFileEarmarkImage, BsFileEarmarkPdf, BsFileEarmarkFont, BsFileEarmark, BsFileEarmarkZip, BsFileEarmarkMusic, BsFileEarmarkPlay, BsEye } from "react-icons/bs"
 
 
 import { RiArchiveDrawerLine, RiComputerLine } from "react-icons/ri"
 import { FiUsers } from "react-icons/fi"
 import { BsClock, BsCloudArrowDown } from "react-icons/bs"
-import { BiTrash } from "react-icons/bi"
+import { BiTrash, BiTrashAlt } from "react-icons/bi"
 import Logo from "./logo-drive-ok.png"
 import Searchs from "../src/icon/searchs.png"
 import Tunes from "../src/icon/tunes.png"
 import Settings from "../src/icon/settings.png"
 import Apps from "../src/icon/apps.png"
+import DownloadLink from "react-download-link"
+
+
+
 
 function Home(props) {
 
@@ -41,6 +45,7 @@ function Home(props) {
 
     const [progress, setProgress] = useState(0)
     const [archive, setArchive] = useState([])
+    const [down, setDown] = useState("")
     //const [iconSelect, setIconSelect] = useState(1)
 
     /*     function changeButton(){
@@ -112,16 +117,20 @@ function Home(props) {
             }).catch(err => { console.log(err) })
 
     }
-    const removeDoc = (data)=>{
+
+    const removeDoc = (data) => {
 
         const myref = doc(db, "drive", props.credential.uid, "files", data.id)
         deleteDoc(myref)
 
     }
 
-    const download = (data)=>{
-        const myref = data.fileUrl
-        console.log(myref)
+    const viewDoc = (data) => {
+        const refUrl = data.fileUrl
+
+        let win = window.open(refUrl, "_blank")
+        win.focus()
+
     }
 
     return (
@@ -185,11 +194,13 @@ function Home(props) {
                             archive.map(data => {
                                 // AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip
                                 //console.log(data.type.split("/")[1])
-                                const image1 = <BiTrash className="icon-trash-field" onClick={() => removeDoc(data)} />
-                                const image2 = <BsCloudArrowDown className="iconDown" onClick={() => download(data)} />
+                                const image1 = <BiTrashAlt className="icon-field" onClick={() => removeDoc(data)} />
+                                const image2 = <BsCloudArrowDown className="icon-field" />
+                                const image3 = <AiOutlineEye className="icon-field" onClick={() => viewDoc(data)}/>
+                                
                                 return (
                                     <div className="boxFile">
-                                        <span className="header-name-field">{image1}{image2} {data.name}</span>
+                                        <span className="header-name-field">{image1}<DownloadLink label={image2} filename={data.name}/>{image3}{data.name}</span>
                                         <span className="header-owner-field">{props.credential.name}</span>
                                         <span className="header-date-field">{data.date}</span>
                                         <span className="header-size-field">{data.size + " KB"}</span>
@@ -217,9 +228,7 @@ function Home(props) {
 
 
             <a onClick={(e) => loggout(e)} href='#'>Sair</a>
-            <div>
-
-            </div>
+            {down && <iframe src={down}></iframe>}
 
 
             {/*             <img alt="" className="logo" src={Logo}  />
