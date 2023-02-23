@@ -90,7 +90,7 @@ function Home(props) {
         if(data == file.name){
             alert("Este arquivo já existe no Drive")
         }else{
-            alert("Arquivo foi salvo com sucesso")
+            //alert("Arquivo foi salvo com sucesso")
     
             let refFile = ref(storage, uid + "/" + file.name)
             //let file = document.querySelector("[name=file]").files[0]
@@ -107,7 +107,7 @@ function Home(props) {
             uploadTask.on("state_changed", (snapshot) => {
                 const change = (snapshot.bytesTransferred / snapshot.totalBytes)
                 setProgress(change)
-                console.log("progress: " + change * 100 + "%")
+                //console.log("progress: " + change * 100 + "%")
                 if(change == 1){
                     setTimeout(setProgress(0),1000)
                 }
@@ -210,8 +210,8 @@ function Home(props) {
                     </div>
                     <div className="header-content" >
                         <h5 className="header-name">Nome</h5>
-                        <h5 className="header-owner">Propietário</h5>
-                        <h5 className="header-date">Data</h5>
+                        <h5 className="header-owner">Proprietário</h5>
+                        <h5 className="header-date">Data última modificação</h5>
                         <h5 className="header-size">Tamanho do arquivo</h5>
                     </div>
 
@@ -221,7 +221,7 @@ function Home(props) {
                                 // AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip
                                 //console.log(data.type.split("/")[1])
                                 const image1 = <BiTrashAlt className="icon-field" onClick={() => removeDoc(data)} />
-                                const image2 = <BsCloudArrowDown className="icon-field" />
+                                const image2 = <BsCloudArrowDown className="icon-field" id="icon-field-"/>
                                 const image3 = <AiOutlineEye className="icon-field" onClick={() => viewDoc(data)}/>
                                 
                                 return (

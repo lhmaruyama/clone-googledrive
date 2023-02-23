@@ -221,11 +221,11 @@
   
 }
 .header-date{
-  width: 15%;
+  width: 20%;
   
 }
 .header-size{
-  width: 20%;
+  width: 15%;
   
 }
 
@@ -235,26 +235,30 @@
   align-items: center;
   height: 40px;
   color: #3b3b3b;
+  font-size: 15px;
 }
 .header-owner-field{
   width: 20%;
   display: flex;
   align-items: center;
   color: #3b3b3b;
+  font-size: 15px;
   
 }
 .header-date-field{
-  width: 15%;
-  display: flex;
-  align-items: center;
-  color: #3b3b3b;
-  
-}
-.header-size-field{
   width: 20%;
   display: flex;
   align-items: center;
   color: #3b3b3b;
+  font-size: 15px;
+  
+}
+.header-size-field{
+  width: 15%;
+  display: flex;
+  align-items: center;
+  color: #3b3b3b;
+  font-size: 15px;
   
 }
 
@@ -266,4 +270,8 @@
     /* border: 1px solid #e4e4e4 ; */
     filter: invert(30%);
 
+}
+
+#icon-field-{
+  margin-left: 5px;
 }
