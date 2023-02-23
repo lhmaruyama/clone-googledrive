@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
-import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, getBytes } from "firebase/storage"
+import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, getBytes, deleteObject  } from "firebase/storage"
 import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDoc } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
@@ -74,7 +74,7 @@ function Home(props) {
 
     async function uploadFile(uid) {
         let file = document.querySelector("#new-file").files[0]
-        let refFile = ref(storage, "myfiles/" + file.name)
+        let refFile = ref(storage, uid + "/" + file.name)
         //let file = document.querySelector("[name=file]").files[0]
         //const today = new Date()
         const options = { day: "numeric", month: "short", year: "numeric" }
@@ -89,7 +89,10 @@ function Home(props) {
         uploadTask.on("state_changed", (snapshot) => {
             const change = (snapshot.bytesTransferred / snapshot.totalBytes)
             setProgress(change)
-            //console.log("progress: " + change * 100 + "%")
+            console.log("progress: " + change * 100 + "%")
+            if(change == 1){
+                setTimeout(setProgress(0),2000)
+            }
         })
 
         await uploadBytes(refFile, file)
@@ -112,8 +115,8 @@ function Home(props) {
                 setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date, id: myref.id })
 
                 //console.log("Successfully saved data in firestore")
-                setProgress(0)
-                //console.log("progress: " + progress + "%")
+                //setProgress(0)
+                //console.log("--progress: " + progress + "%--")
             }).catch(err => { console.log(err) })
 
     }
@@ -123,11 +126,13 @@ function Home(props) {
         const myref = doc(db, "drive", props.credential.uid, "files", data.id)
         deleteDoc(myref)
 
+        const refFile = ref(storage, props.credential.uid + "/" + data.name)
+        deleteObject(refFile).then().catch()
     }
 
     const viewDoc = (data) => {
-        const refUrl = data.fileUrl
 
+        const refUrl = data.fileUrl
         let win = window.open(refUrl, "_blank")
         win.focus()
 
