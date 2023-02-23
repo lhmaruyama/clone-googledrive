@@ -275,3 +275,19 @@
 #icon-field-{
   margin-left: 5px;
 }
+
+.button-loggout{
+  background-color: #1a73e9;
+  border: 0;
+  border-radius: 5px;
+  color: beige;
+  font-weight: bold;
+  height: 44px;
+  width: 150px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.button-loggout:hover{
+
+  background-color: #1f58a3;
+}

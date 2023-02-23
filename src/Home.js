@@ -15,7 +15,7 @@ import { RiArchiveDrawerLine, RiComputerLine } from "react-icons/ri"
 import { FiUsers } from "react-icons/fi"
 import { BsClock, BsCloudArrowDown } from "react-icons/bs"
 import { BiTrash, BiTrashAlt } from "react-icons/bi"
-import Logo from "./logo-drive-ok.png"
+import Logo from "../src/img/logo-drive-ok.png"
 import Searchs from "../src/icon/searchs.png"
 import Tunes from "../src/icon/tunes.png"
 import Settings from "../src/icon/settings.png"
@@ -253,7 +253,7 @@ function Home(props) {
 
 
 
-            <a onClick={(e) => loggout(e)} href='#'>Sair</a>
+            <a className="button-loggout" onClick={(e) => loggout(e)} href='#'>Sair</a>
             
 
 
