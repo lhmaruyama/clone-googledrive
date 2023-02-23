@@ -217,7 +217,7 @@ function Home(props) {
 
                     <div className="boxFiles">
                         {
-                            archive.map(data => {
+                            archive.map((data, index) => {
                                 // AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip
                                 //console.log(data.type.split("/")[1])
                                 const image1 = <BiTrashAlt className="icon-field" onClick={() => removeDoc(data)} />
@@ -225,11 +225,11 @@ function Home(props) {
                                 const image3 = <AiOutlineEye className="icon-field" onClick={() => viewDoc(data)}/>
                                 
                                 return (
-                                    <div className="boxFile">
-                                        <span className="header-name-field">{image1}<DownloadLink label={image2} filename={data.name}/>{image3}{data.name}</span>
-                                        <span className="header-owner-field">{props.credential.name}</span>
-                                        <span className="header-date-field">{data.date}</span>
-                                        <span className="header-size-field">{data.size + " KB"}</span>
+                                    <div className="boxFile" key={`${index}0`}>
+                                        <span className="header-name-field" key={`${index}a`}>{image1}<DownloadLink label={image2} filename={data.name}/>{image3}{data.name}</span>
+                                        <span className="header-owner-field" key={`${index}b`}>{props.credential.name}</span>
+                                        <span className="header-date-field" key={`${index}c`}>{data.date}</span>
+                                        <span className="header-size-field" key={`${index}d`}>{data.size + " KB"}</span>
                                     </div>
                                 )
                             })
