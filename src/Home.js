@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { signOut } from "firebase/auth"
 import { auth, storage, db } from "./firebase.js"
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, getBytes, deleteObject  } from "firebase/storage"
-import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDoc } from "firebase/firestore"
+import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDocs } from "firebase/firestore"
 import "./Home.css"
 import { GoPlus } from "react-icons/go"
 
@@ -45,7 +45,7 @@ function Home(props) {
 
     const [progress, setProgress] = useState(0)
     const [archive, setArchive] = useState([])
-    const [down, setDown] = useState("")
+    //const [down, setDown] = useState("")
     //const [iconSelect, setIconSelect] = useState(1)
 
     /*     function changeButton(){
@@ -72,52 +72,73 @@ function Home(props) {
     }, [props])
 
 
+
     async function uploadFile(uid) {
+
         let file = document.querySelector("#new-file").files[0]
-        let refFile = ref(storage, uid + "/" + file.name)
-        //let file = document.querySelector("[name=file]").files[0]
-        //const today = new Date()
-        const options = { day: "numeric", month: "short", year: "numeric" }
-        //const today = file.lastModifiedDate.getDate() + "/" + file.lastModifiedDate.getMonth() + "/" + file.lastModifiedDate.getFullYear()
-        const today = file.lastModifiedDate
-        const date = today.toLocaleDateString("pt-BR", options)
-        const size = Math.ceil(file.size / 1024)
-        //console.log(date)
-        //console.log(file.size)
 
-        const uploadTask = uploadBytesResumable(refFile, file)
-        uploadTask.on("state_changed", (snapshot) => {
-            const change = (snapshot.bytesTransferred / snapshot.totalBytes)
-            setProgress(change)
-            console.log("progress: " + change * 100 + "%")
-            if(change == 1){
-                setTimeout(setProgress(0),2000)
-            }
-        })
+        const q = query(collection(db, "drive", uid, "files"), where("name", "==", file.name))
+        const querySnapshot = await getDocs(q)
+        let data
+        querySnapshot.forEach((doc=>{
 
-        await uploadBytes(refFile, file)
-            .then(() => {
+            return data = doc.data().name
 
-                //console.log("Successfully uploaded to storage")
-                //setProgress(0)
-            }).catch()
+            
+        }))
+        //console.log(data)
+        if(data == file.name){
+            alert("Este arquivo já existe no Drive")
+        }else{
+            alert("Arquivo foi salvo com sucesso")
+    
+            let refFile = ref(storage, uid + "/" + file.name)
+            //let file = document.querySelector("[name=file]").files[0]
+            //const today = new Date()
+            const options = { day: "numeric", month: "short", year: "numeric" }
+            //const today = file.lastModifiedDate.getDate() + "/" + file.lastModifiedDate.getMonth() + "/" + file.lastModifiedDate.getFullYear()
+            const today = file.lastModifiedDate
+            const date = today.toLocaleDateString("pt-BR", options)
+            const size = Math.ceil(file.size / 1024)
+            //console.log(date)
+            //console.log(file.size)
+    
+            const uploadTask = uploadBytesResumable(refFile, file)
+            uploadTask.on("state_changed", (snapshot) => {
+                const change = (snapshot.bytesTransferred / snapshot.totalBytes)
+                setProgress(change)
+                console.log("progress: " + change * 100 + "%")
+                if(change == 1){
+                    setTimeout(setProgress(0),1000)
+                }
+            })
+    
+            await uploadBytes(refFile, file)
+                .then(() => {
+    
+                    //console.log("Successfully uploaded to storage")
+                    //setProgress(0)
+                }).catch()
+    
+            //const stor = getStorage()
+            //const storRef = ref(stor, "myfiles/" + file.name)
+            //console.log(storRef === refFile)
+            //false   
+    
+            await getDownloadURL(refFile)
+                .then((url) => {
+                    //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
+                    //const myref = doc(db,"files", "subfiles", "item", "subitem")
+                    const myref = doc(collection(db, "drive", uid, "files"))
+                    setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date, id: myref.id })
+    
+                    //console.log("Successfully saved data in firestore")
+                    //setProgress(0)
+                    //console.log("--progress: " + progress + "%--")
+                }).catch(err => { console.log(err) })
 
-        //const stor = getStorage()
-        //const storRef = ref(stor, "myfiles/" + file.name)
-        //console.log(storRef === refFile)
-        //false   
+        }
 
-        await getDownloadURL(refFile)
-            .then((url) => {
-                //const myref = doc(db,"files/subfiles/item/subitem") subcoleção com ID personalizado
-                //const myref = doc(db,"files", "subfiles", "item", "subitem")
-                const myref = doc(collection(db, "drive", uid, "files"))
-                setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date, id: myref.id })
-
-                //console.log("Successfully saved data in firestore")
-                //setProgress(0)
-                //console.log("--progress: " + progress + "%--")
-            }).catch(err => { console.log(err) })
 
     }
 
@@ -233,7 +254,7 @@ function Home(props) {
 
 
             <a onClick={(e) => loggout(e)} href='#'>Sair</a>
-            {down && <iframe src={down}></iframe>}
+            
 
 
             {/*             <img alt="" className="logo" src={Logo}  />
