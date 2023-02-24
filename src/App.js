@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { auth, provider } from "../src/firebase"
 import { signInWithPopup, onAuthStateChanged } from "firebase/auth"
-//import {Router, Routes, Route} from "react-router-dom"
-//import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import Home from "./Home"
 import Capa from "./img/capa.jpg"
 import Img from "./img/logo.png"
@@ -16,38 +14,41 @@ function App() {
   useEffect(()=>{
     onAuthStateChanged(auth,
       (val)=>{
-        setLogin({
-          name: val.displayName,
-          email: val.email,
-          image: val.photoURL,
-          uid: val.uid
-        })
-        //alert("Bem vindo de volta " + val.displayName)
-        //console.log(val)
+        if(val){
+          setLogin({
+            name: val.displayName,
+            email: val.email,
+            image: val.photoURL,
+            uid: val.uid
+          })     
+        }
       }
     )
   },[])
 
   function handleLogin(e) {
     e.preventDefault()
-    //alert("oioioihofihroih")
     signInWithPopup(auth, provider)
     .then(result=>{
-      if(result){setLogin(result.user.email)}
+      if(result){
+        setLogin({
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL,
+          uid: result.user.uid
+        })
+      }
     })
     .catch()
   }
+  
   return (
     <div className="App">
       {(login) ? (
         <BrowserRouter>
-
           <Routes>
             <Route path="/" element={<Home credential={login}/>} />
-            
           </Routes>
-
-
         </BrowserRouter>
 
       ) :
@@ -67,8 +68,6 @@ function App() {
             </div>
           </div>
 
-            {/* <a onClick={(e) => handleLogin(e)} href='#'>Fazer Login</a> */}
-            {/* <img src={Logo}/> */}
         </div>
         
       }

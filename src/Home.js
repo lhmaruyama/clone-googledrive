@@ -4,26 +4,23 @@ import { auth, storage, db } from "./firebase.js"
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, getBytes, deleteObject  } from "firebase/storage"
 import { addDoc, collection, doc, setDoc, onSnapshot, query, where, deleteDoc, getDocs } from "firebase/firestore"
 import "./Home.css"
-import { GoPlus } from "react-icons/go"
 
 import { GrCheckboxSelected, GrCheckbox } from "react-icons/gr"
 import { AiOutlineFileExcel, AiOutlineFileWord, AiOutlineFileImage, AiOutlineFilePdf, AiOutlineFileText, AiOutlineFile, AiOutlineFileZip, AiOutlineEye } from "react-icons/ai"
 import { BsFileEarmarkExcel, BsFileEarmarkWord, BsFileEarmarkImage, BsFileEarmarkPdf, BsFileEarmarkFont, BsFileEarmark, BsFileEarmarkZip, BsFileEarmarkMusic, BsFileEarmarkPlay, BsEye } from "react-icons/bs"
 
-
+import { GoPlus } from "react-icons/go"
 import { RiArchiveDrawerLine, RiComputerLine } from "react-icons/ri"
 import { FiUsers } from "react-icons/fi"
 import { BsClock, BsCloudArrowDown } from "react-icons/bs"
 import { BiTrash, BiTrashAlt } from "react-icons/bi"
+
 import Logo from "../src/img/logo-drive-ok.png"
 import Searchs from "../src/icon/searchs.png"
 import Tunes from "../src/icon/tunes.png"
 import Settings from "../src/icon/settings.png"
 import Apps from "../src/icon/apps.png"
 import DownloadLink from "react-download-link"
-
-
-
 
 function Home(props) {
 
@@ -37,27 +34,11 @@ function Home(props) {
             .catch()
     }
 
-    /*     function loggout(e) {
-            e.preventDefault()
-            //props.credential = null
-    
-        } */
-
     const [progress, setProgress] = useState(0)
     const [archive, setArchive] = useState([])
-    //const [down, setDown] = useState("")
-    //const [iconSelect, setIconSelect] = useState(1)
-
-    /*     function changeButton(){
-            (iconSelect==0)?setIconSelect(1):setIconSelect(0)
-        }
-        useEffect(() =>{
-        }, []) */
 
     useEffect(() => {
-        //const myref = doc(collection(db, "drive", props.credential.uid, "files"))
-        //const myref = doc(collection(db, "drive"))
-        //const myref = query(collection(db, "drive"))
+
         const myref = query(collection(db, "drive", props.credential.uid, "files"))
         onSnapshot(myref, (snapshot) => {
 
@@ -65,12 +46,11 @@ function Home(props) {
                 //console.log(list.data())
                 return list.data()
             })
-            //setArchive()
+            
             setArchive(setArch)
         })
 
     }, [props])
-
 
 
     async function uploadFile(uid) {
@@ -83,7 +63,6 @@ function Home(props) {
         querySnapshot.forEach((doc=>{
 
             return data = doc.data().name
-
             
         }))
         //console.log(data)
@@ -100,8 +79,6 @@ function Home(props) {
             const today = file.lastModifiedDate
             const date = today.toLocaleDateString("pt-BR", options)
             const size = Math.ceil(file.size / 1024)
-            //console.log(date)
-            //console.log(file.size)
     
             const uploadTask = uploadBytesResumable(refFile, file)
             uploadTask.on("state_changed", (snapshot) => {
@@ -115,15 +92,9 @@ function Home(props) {
     
             await uploadBytes(refFile, file)
                 .then(() => {
-    
-                    //console.log("Successfully uploaded to storage")
-                    //setProgress(0)
+
                 }).catch()
     
-            //const stor = getStorage()
-            //const storRef = ref(stor, "myfiles/" + file.name)
-            //console.log(storRef === refFile)
-            //false   
     
             await getDownloadURL(refFile)
                 .then((url) => {
@@ -133,12 +104,9 @@ function Home(props) {
                     setDoc(myref, { fileUrl: url, type: file.type, name: file.name, size: size, date: date, id: myref.id })
     
                     //console.log("Successfully saved data in firestore")
-                    //setProgress(0)
-                    //console.log("--progress: " + progress + "%--")
+
                 }).catch(err => { console.log(err) })
-
         }
-
 
     }
 
@@ -251,20 +219,6 @@ function Home(props) {
 
             </div>
 
-
-
-
-            {/* <a className="button-loggout" onClick={(e) => loggout(e)} href='#'>Sair</a> */}
-            
-            
-
-
-            {/*             <img alt="" className="logo" src={Logo}  />
-          <input type={'text'} className="input email" placeholder='Nome' />
-          <input type={'email'} className="input email" placeholder='Nome de usuário' />
-          <input type={'password'} className="input email" placeholder='Senha' />
-            <div className=''></div>
-            <div className=''></div> */}
         </div>
     )
 
