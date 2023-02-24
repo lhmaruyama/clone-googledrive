@@ -202,6 +202,7 @@ function Home(props) {
                             <BiTrash /><span>Lixeira</span>
                         </div>
                     </div>
+                    <button className="button-loggout" onClick={(e) => loggout(e)}>Sair</button>
                 </div>
 
                 <div className="content" >
@@ -253,7 +254,8 @@ function Home(props) {
 
 
 
-            <a className="button-loggout" onClick={(e) => loggout(e)} href='#'>Sair</a>
+            {/* <a className="button-loggout" onClick={(e) => loggout(e)} href='#'>Sair</a> */}
+            
             
 
 
